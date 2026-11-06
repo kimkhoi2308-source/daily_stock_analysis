@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 from src.schemas.decision_scale import signal_key_for_score
 
-SUPPORTED_REPORT_LANGUAGES = ("zh", "en", "ko")
+SUPPORTED_REPORT_LANGUAGES = ("zh", "en", "ko", "vi")
 
 _REPORT_LANGUAGE_ALIASES = {
     "zh-cn": "zh",
@@ -28,6 +28,9 @@ _REPORT_LANGUAGE_ALIASES = {
     "kr": "ko",
     "ko-kr": "ko",
     "ko_kr": "ko",
+    "vi": "vi",
+    "vietnamese": "vi",
+    "vn": "vi",
 }
 
 _OPERATION_ADVICE_CANONICAL_MAP = {
@@ -812,13 +815,17 @@ def _strip_decision_negation_connectors(text: str) -> str:
     return suffix
 
 
-def normalize_report_language(value: Optional[str], default: str = "zh") -> str:
-    """Normalize report language to a supported short code."""
-    candidate = (value or default).strip().lower().replace(" ", "_")
-    candidate = _REPORT_LANGUAGE_ALIASES.get(candidate, candidate)
-    if candidate in SUPPORTED_REPORT_LANGUAGES:
-        return candidate
-    return default
+def normalize_report_language(
+    value: Optional[str], default: str = "vi"
+) -> str:
+  """Normalize report language to a supported short code."""
+  candidate = (value or default).strip().lower().replace(" ", "_")
+  candidate = _REPORT_LANGUAGE_ALIASES.get(candidate, candidate)
+  if candidate in ["vi", "vietnamese", "vn"]:
+    return "vi"
+  if candidate in SUPPORTED_REPORT_LANGUAGES:
+    return candidate
+  return "vi" 
 
 
 def is_supported_report_language_value(value: Optional[str]) -> bool:
