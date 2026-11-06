@@ -66,16 +66,26 @@ _OPERATION_ADVICE_CANONICAL_MAP = {
     "비중축소": "reduce",
     "매도": "sell",
     "적극 매도": "strong_sell",
+    "buy": "🟢 MUA VÀO",
+    "strong_buy": "🚀 MUA MẠNH",
+    "hold": "🟡 NẮM GIỮ",
+    "watch": "👀 THEO DÕI / QUAN SÁT",
+    "add": "➕ GIA TĂNG TỶ TRỌNG",
+    "reduce": "➖ HẠ TỶ TRỌNG",
+    "sell": "🔴 BÁN RA",
+    "strong_sell": "⛔ BÁN HẾT (THOÁT HÀNG)",
+    "avoid": "⚠️ NÉ TRÁNH",
+    "alert": "🚨 CẢNH BÁO RỦI RO",
 }
 
 _OPERATION_ADVICE_TRANSLATIONS = {
-    "strong_buy": {"zh": "强烈买入", "en": "Strong Buy", "ko": "적극 매수"},
-    "buy": {"zh": "买入", "en": "Buy", "ko": "매수"},
-    "hold": {"zh": "持有", "en": "Hold", "ko": "보유"},
-    "watch": {"zh": "观望", "en": "Watch", "ko": "관망"},
-    "reduce": {"zh": "减仓", "en": "Reduce", "ko": "비중축소"},
-    "sell": {"zh": "卖出", "en": "Sell", "ko": "매도"},
-    "strong_sell": {"zh": "强烈卖出", "en": "Strong Sell", "ko": "적극 매도"},
+    "strong_buy": {"zh": "强烈买入", "en": "Strong Buy", "ko": "적극 매수", "vi": "Mua mạnh"},
+    "buy": {"zh": "买入", "en": "Buy", "ko": "매수", "vi": "🟢 MUA VÀO"},
+    "hold": {"zh": "持有", "en": "Hold", "ko": "보유", "vi": "🟡 NẮM GIỮ"},
+    "watch": {"zh": "观望", "en": "Watch", "ko": "관망", "vi": "👀 THEO DÕI / QUAN SÁT"},
+    "reduce": {"zh": "减仓", "en": "Reduce", "ko": "비중축소", "vi": "➖ HẠ TỶ TRỌNG"},
+    "sell": {"zh": "卖出", "en": "Sell", "ko": "매도", "vi": "🔴 BÁN RA"},
+    "strong_sell": {"zh": "强烈卖出", "en": "Strong Sell", "ko": "적극 매도", "vi": "⛔ BÁN HẾT (THOÁT HÀNG)"},
 }
 
 _TREND_PREDICTION_CANONICAL_MAP = {
@@ -311,6 +321,7 @@ _UNKNOWN_BY_LANGUAGE = {
     "zh": "未知",
     "en": "Unknown",
     "ko": "알 수 없음",
+    "vi": "không tìm thấy"
 }
 
 _NO_DATA_BY_LANGUAGE = {
@@ -835,6 +846,26 @@ def is_supported_report_language_value(value: Optional[str]) -> bool:
         return False
     return candidate in SUPPORTED_REPORT_LANGUAGES or candidate in _REPORT_LANGUAGE_ALIASES
 
+def get_display_action_label(action: str, lang: str = "vi") -> str:
+  """Lấy nhãn hiển thị khuyến nghị theo ngôn ngữ (mặc định tiếng Việt)."""
+  norm_lang = normalize_report_language(lang)
+  action_key = (action or "").strip().lower()
+
+  lang_dict = ACTION_DISPLAY_NAMES.get(
+      norm_lang, ACTION_DISPLAY_NAMES.get("vi", {})
+  )
+  return lang_dict.get(action_key, action.upper())
+
+
+def get_display_decision_label(decision_type: str, lang: str = "vi") -> str:
+  """Lấy nhãn 3 trạng thái cốt lõi (Mua/Nắm giữ/Bán) bằng Tiếng Việt."""
+  norm_lang = normalize_report_language(lang)
+  dec_key = (decision_type or "").strip().lower()
+
+  lang_dict = DECISION_TYPE_DISPLAY_NAMES.get(
+      norm_lang, DECISION_TYPE_DISPLAY_NAMES.get("vi", {})
+  )
+  return lang_dict.get(dec_key, decision_type.upper())
 
 def get_report_labels(language: Optional[str]) -> Dict[str, str]:
     """Return UI copy for the selected report language."""
